@@ -2,12 +2,11 @@ from crewai import Agent, Crew, Process, Task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import CodeInterpreterTool
-
-from tools.github_list_files_tool import GithubListFilesTool
 from tools.github_commit_code_tool import GithubCommitCodeTool
 from tools.github_create_branch_tool import GithubCreateBranchTool
 from tools.github_create_pull_request_tool import GithubCreatePullRequestTool
 from tools.github_issue_fetch_tool import GithubIssueFetchTool
+from tools.github_list_files_tool import GithubListFilesTool
 
 
 @CrewBase
@@ -87,14 +86,15 @@ class DeveloperCrew:
             allow_delegation=True,
         )
 
-    @agent
-    def manager(self) -> Agent:
-        return Agent(
-            config=self.agents_config["manager"],  # type: ignore[index]
-            verbose=True,
-            allow_code_execution=False,
-            allow_delegation=True,
-        )
+    # @agent
+    # def manager(self) -> Agent:
+    #     return Agent(
+    #         config=self.agents_config["manager"],  # type: ignore[index]
+    #         verbose=True,
+    #         allow_code_execution=False,
+    #         allow_delegation=True,
+    #     )
+
     # @task
     # def backlog_task(self) -> Task:
     #     return Task(
@@ -105,56 +105,87 @@ class DeveloperCrew:
     def develop_task(self) -> Task:
         return Task(
             config=self.tasks_config["develop_task"],  # type: ignore[index]
-            context=[self.requirements_task(), self.create_branch_task(), self.open_pr_task(), self.test_task(), self.setup_task()]  # type: ignore[index],
+            context=[
+                self.requirements_task(),
+                self.create_branch_task(),
+                self.open_pr_task(),
+                self.test_task(),
+                self.setup_task(),
+            ],  # type: ignore[index],
         )
 
     @task
     def requirements_task(self) -> Task:
         return Task(
             config=self.tasks_config["requirements_task"],  # type: ignore[index]
-            context=[self.develop_task(), self.create_branch_task(), self.open_pr_task(), self.test_task(), self.setup_task()]
+            context=[
+                self.develop_task(),
+                self.create_branch_task(),
+                self.open_pr_task(),
+                self.test_task(),
+                self.setup_task(),
+            ],
         )
 
     @task
     def create_branch_task(self) -> Task:
         return Task(
             config=self.tasks_config["create_branch_task"],  # type: ignore[index]
-            context=[self.develop_task(), self.requirements_task(), self.open_pr_task(), self.test_task(), self.setup_task()]
+            context=[
+                self.develop_task(),
+                self.requirements_task(),
+                self.open_pr_task(),
+                self.test_task(),
+                self.setup_task(),
+            ],
         )
 
     @task
     def open_pr_task(self) -> Task:
         return Task(
             config=self.tasks_config["open_pr_task"],  # type: ignore[index]
-            context=[self.develop_task(), self.requirements_task(), self.create_branch_task(), self.test_task(), self.setup_task()]
+            context=[
+                self.develop_task(),
+                self.requirements_task(),
+                self.create_branch_task(),
+                self.test_task(),
+                self.setup_task(),
+            ],
         )
 
     @task
     def test_task(self) -> Task:
         return Task(
             config=self.tasks_config["test_task"],  # type: ignore[index]
-            context=[self.develop_task(), self.requirements_task(), self.create_branch_task(), self.open_pr_task(), self.setup_task()]
+            context=[
+                self.develop_task(),
+                self.requirements_task(),
+                self.create_branch_task(),
+                self.open_pr_task(),
+                self.setup_task(),
+            ],
         )
 
     @task
     def setup_task(self) -> Task:
         return Task(
             config=self.tasks_config["setup_task"],  # type: ignore[index]
-            context=[self.develop_task(), self.requirements_task(), self.create_branch_task(), self.open_pr_task(), self.test_task()]
+            context=[
+                self.develop_task(),
+                self.requirements_task(),
+                self.create_branch_task(),
+                self.open_pr_task(),
+                self.test_task(),
+            ],
         )
 
     @crew
     def crew(self) -> Crew:
         """Creates the software development crew"""
         return Crew(
-            agents=[
-                self.requirements_engineer(),
-                self.developer(),
-                self.test_analyst(),
-                self.dev_ops(),
-            ],
+            agents=self.agents,
             tasks=self.tasks,
-            manager_agent=self.manager(),
+            manager_llm="gemini/gemini-2.0-flash",
             process=Process.hierarchical,
             verbose=True,
         )
