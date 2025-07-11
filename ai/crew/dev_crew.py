@@ -86,6 +86,15 @@ class DeveloperCrew:
             allow_code_execution=True,
             allow_delegation=True,
         )
+
+    @agent
+    def manager(self) -> Agent:
+        return Agent(
+            config=self.agents_config["manager"],  # type: ignore[index]
+            verbose=True,
+            allow_code_execution=False,
+            allow_delegation=True,
+        )
     # @task
     # def backlog_task(self) -> Task:
     #     return Task(
@@ -96,50 +105,56 @@ class DeveloperCrew:
     def develop_task(self) -> Task:
         return Task(
             config=self.tasks_config["develop_task"],  # type: ignore[index]
-            # context=[self.backlog_task()],
+            context=[self.requirements_task(), self.create_branch_task(), self.open_pr_task(), self.test_task(), self.setup_task()]  # type: ignore[index],
         )
 
     @task
     def requirements_task(self) -> Task:
         return Task(
             config=self.tasks_config["requirements_task"],  # type: ignore[index]
-            # context=[self.backlog_task()],
+            context=[self.develop_task(), self.create_branch_task(), self.open_pr_task(), self.test_task(), self.setup_task()]
         )
 
     @task
     def create_branch_task(self) -> Task:
         return Task(
             config=self.tasks_config["create_branch_task"],  # type: ignore[index]
-            # context=[self.backlog_task()],
+            context=[self.develop_task(), self.requirements_task(), self.open_pr_task(), self.test_task(), self.setup_task()]
         )
 
     @task
     def open_pr_task(self) -> Task:
         return Task(
             config=self.tasks_config["open_pr_task"],  # type: ignore[index]
-            # context=[self.backlog_task()],
+            context=[self.develop_task(), self.requirements_task(), self.create_branch_task(), self.test_task(), self.setup_task()]
         )
 
     @task
     def test_task(self) -> Task:
         return Task(
             config=self.tasks_config["test_task"],  # type: ignore[index]
-            # context=[self.backlog_task()],
+            context=[self.develop_task(), self.requirements_task(), self.create_branch_task(), self.open_pr_task(), self.setup_task()]
         )
 
     @task
     def setup_task(self) -> Task:
         return Task(
             config=self.tasks_config["setup_task"],  # type: ignore[index]
-            # context=[self.backlog_task()],
+            context=[self.develop_task(), self.requirements_task(), self.create_branch_task(), self.open_pr_task(), self.test_task()]
         )
 
     @crew
     def crew(self) -> Crew:
         """Creates the software development crew"""
         return Crew(
-            agents=self.agents,
+            agents=[
+                self.requirements_engineer(),
+                self.developer(),
+                self.test_analyst(),
+                self.dev_ops(),
+            ],
             tasks=self.tasks,
-            process=Process.sequential,
+            manager_agent=self.manager(),
+            process=Process.hierarchical,
             verbose=True,
         )
