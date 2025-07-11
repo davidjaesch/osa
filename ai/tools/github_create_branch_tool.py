@@ -6,14 +6,15 @@ from dotenv import load_dotenv
 from github import Github
 from pydantic import BaseModel, Field
 
-
 load_dotenv()
-GH_REPO_KEY = os.getenv("NOTION_API_KEY")
+GH_REPO_KEY = os.getenv("GH_REPO_KEY")
 
 
 class CreateBranchInput(BaseModel):
     branch_name: str = Field(..., description="Name of the new branch to create")
-    base: str = Field("main", description="Name of the base branch to create the new branch from")
+    base: str = Field(
+        "main", description="Name of the base branch to create the new branch from"
+    )
 
 
 class GithubCreateBranchTool(BaseTool):
