@@ -92,21 +92,14 @@ class DeveloperCrew:
         """Initialize tasks for the crew."""
         self.develop_task = Task(
             description="""
-                Review the issues in the GitHub Project Board with GithubIssueFetchTool.
-                Select one high-priority issue from the backlog.
-                Analyze the issue details, including title, description, requirements, and acceptance criteria.
-                Ensure you understand the context and purpose of the issue.
-                Compare with files in the current repository using GithubListFilesTool.
+                Select one high-priority issue from the backlog with GithubIssueFetchTool.
+                Analyze the issue details and compare with files in the current repository using GithubListFilesTool.
                 Implement the required functionality and take the existing project into consideration.
-                Write clean, testable code that fulfills all the defined acceptance criteria.
+                Write clean, testable state of the art code that fulfills all the defined acceptance criteria.
                 Ensure the code adheres to the project's coding standards and best practices.
                 Document the code thoroughly, including comments and docstrings where necessary.
                 Write unit tests to cover all functionalities, edge cases, and potential failure points.
-                Set up the development environment, including installing necessary dependencies and tools.
                 Ensure that the environment is configured correctly for the project.
-                Use the uv tool to install dependencies from the pyproject.toml file.
-                Ensure that the development environment is ready for coding and testing.
-                This task is crucial for the successful execution of the development tasks.
                 Use the CodeInterpreterTool to execute the application and see if it works.
                 If some dependencies are missing, install them using the CodeInterpreterTool.
                 Ensure that the application runs without errors and all dependencies are installed correctly.
@@ -114,8 +107,7 @@ class DeveloperCrew:
                 Create a new branch for development using the format: 'feature/<slugified-issue-title>'.
                 Ensure the branch is based on the latest main branch to avoid conflicts.
                 Slice the whole code into smaller, manageable commits that are easy to review.
-                Only open a pull request (PR) after the code is fully implemented, tested, and reviewed by the whole crew and approved.
-                Always ask all the crew members for feedback before opening a PR.
+                Only open a pull request (PR) after the code is fully implemented, tested.
                 Open a pull request (PR) that includes a technical summary, references the related issue (e.g. #123), and outlines how to test the implementation.
             """,
             expected_output="""
