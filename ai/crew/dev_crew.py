@@ -140,6 +140,6 @@ class DeveloperCrew:
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
-            process=Process.hierarchical,
+            process=Process.sequential,
             verbose=True,
         )
