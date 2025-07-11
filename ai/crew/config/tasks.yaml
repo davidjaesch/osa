@@ -44,24 +44,99 @@ requirements_task:
 
   agent: requirements_engineer
 
-create_branch_task:
+develop_task:
   description: >
-    Create a new branch for development using the format: 'feature/<slugified-issue-title>' with GithubCreateBranchTool.
-    Ensure the branch is based on the latest main branch to avoid conflicts.
+    Implement the required functionality and take the exisiting project in consideration.
+    Write clean, testable code that fulfills all the defined acceptance criteria.
+    Ensure the code adheres to the project's coding standards and best practices.
+    Document the code thoroughly, including comments and docstrings where necessary.
+    Write unit tests to cover all functionalities, edge cases, and potential failure points.
+    Set up the development environment, including installing necessary dependencies and tools.
+    Ensure that the environment is configured correctly for the project.
+    Use the uv tool to install dependencies from the pyproject.toml file.
+    Ensure that the development environment is ready for coding and testing.
+    This task is crucial for the successful execution of the development tasks.
+    Use the CodeInterpreterTool to execute the application and see if it works.
+    If some dependecies are missing, install them using the CodeInterpreterTool.
+    Ensure that the application runs without errors and all dependencies are installed correctly.
+    Repeat changing the code until all the written tests are passing and the application is running smoothly with all necessary dependencies.
 
   expected_output: >
     A single JSON object with the following fields:
-      - branch_name: string (e.g. "feature/user-account-creation")
+      - code: Markdown-formatted code block (Python, TypeScript, etc.)
 
     Example:
     {
-      "branch_name": "feature/user-account-creation",
+      "code": "```python\ndef create_account(...):\n    # implementation\n```",
     }
 
-  agent: dev_ops
+  agent: developer
 
-open_pr_task:
+# test_task:
+#   description: >
+#     Review the code changes in the pull request (PR) created by the developer.
+#     Ensure that the implementation meets all requirements and acceptance criteria.
+#     Write unit tests to cover all functionalities, edge cases, and potential failure points.
+#     Use the CodeInterpreterTool to run tests and validate the implementation.
+#     Ensure that the code adheres to the project's coding standards and best practices.
+#     Document the tests thoroughly, including comments and docstrings where necessary.
+#     Ensure the branch is based on the latest main branch to avoid conflicts.
+#     Push the tests to the remote repository and ensure it is well-documented.
+
+#   expected_output: >
+#     A single JSON object with the following fields:
+#       - code: Markdown-formatted code block (Python, TypeScript, etc.)
+
+#     Example:
+#     {
+#       "code": "```python\ndef create_account(...):\n    # implementation\n```",
+#     }
+
+#   agent: test_analyst
+
+# setup_task:
+#   description: >
+#     Set up the development environment, including installing necessary dependencies and tools.
+#     Ensure that the environment is configured correctly for the project.
+#     Use the uv tool to install dependencies from the pyproject.toml file.
+#     Ensure that the development environment is ready for coding and testing.
+#     This task is crucial for the successful execution of the development tasks.
+#     Use the CodeInterpreterTool to execute the application and see if it works.
+#     If some dependecies are missing, install them using the CodeInterpreterTool.
+#     Ensure that the application runs without errors and all dependencies are installed correctly.
+
+#   expected_output: >
+#     A single JSON object with the following fields:
+#       - setup_status: string (e.g. "Development environment set up successfully")
+
+#     Example:
+#     {
+#       "setup_status": "Development environment set up successfully"
+#     }
+
+#   agent: dev_ops
+
+# create_branch_task:
+#   description: >
+#     Create a new branch for development using the format: 'feature/<slugified-issue-title>' with GithubCreateBranchTool.
+#     Ensure the branch is based on the latest main branch to avoid conflicts.
+
+#   expected_output: >
+#     A single JSON object with the following fields:
+#       - branch_name: string (e.g. "feature/user-account-creation")
+
+#     Example:
+#     {
+#       "branch_name": "feature/user-account-creation",
+#     }
+
+#   agent: dev_ops
+
+pr_task:
   description: >
+    Create a new branch for development using the format: 'feature/<slugified-issue-title>' with GithubCreateBranchTool.
+    Ensure the branch is based on the latest main branch to avoid conflicts.
+    Slice the whole code into smaller, manageable commits that are easy to review and commit with GithubCommitCodeTool.
     Only open a pull request (PR) after the code is fully implemented, tested and reviewed by the whole crew and approved.
     Always ask all the crew members for feedback before opening a PR.
     Open a pull request (PR) that includes a technical summary, references the related issue (e.g. #123), and outlines how to test the implementation with GithubCreatePullRequestTool.
@@ -78,76 +153,6 @@ open_pr_task:
       "pr_description": "This PR implements #123 by adding a backend endpoint and frontend form. Tested manually and via unit tests.",
       "branch_name": "feature/user-account-creation",
       "code": "```python\ndef create_account(...):\n    # implementation\n```"
-    }
-
-  agent: dev_ops
-
-develop_task:
-  description: >
-    Implement the required functionality in the new Git branch and take the exisiting project in consideration.
-    Write clean, testable code that fulfills all the defined acceptance criteria.
-    Slice into smaller, manageable commits that are easy to review and commit with GithubCommitCodeTool.
-    Ensure the code adheres to the project's coding standards and best practices.
-    Document the code thoroughly, including comments and docstrings where necessary.
-    Ensure the branch is based on the latest main branch to avoid conflicts.
-    Push the code to the remote repository and ensure it is well-documented.
-
-  expected_output: >
-    A single JSON object with the following fields:
-      - branch_name: string (e.g. "feature/user-account-creation")
-      - pr_title: string (e.g. "✨ Implement user account creation")
-      - code: Markdown-formatted code block (Python, TypeScript, etc.)
-      - pr_description: string including technical summary, linked issue, and test instructions
-
-    Example:
-    {
-      "branch_name": "feature/user-account-creation",
-      "pr_title": "✨ Implement user account creation",
-      "code": "```python\ndef create_account(...):\n    # implementation\n```",
-      "pr_description": "This PR implements #123 by adding a backend endpoint and frontend form. Tested manually and via unit tests."
-    }
-
-  agent: developer
-
-
-test_task:  
-  description: >
-    Review the code changes in the pull request (PR) created by the developer.
-    Ensure that the implementation meets all requirements and acceptance criteria.
-    Write unit tests to cover all functionalities, edge cases, and potential failure points.
-    Use the CodeInterpreterTool to run tests and validate the implementation.
-    Ensure that the code adheres to the project's coding standards and best practices.
-    Document the tests thoroughly, including comments and docstrings where necessary.
-    Ensure the branch is based on the latest main branch to avoid conflicts.
-    Push the tests to the remote repository and ensure it is well-documented.
-
-  expected_output: >
-    A single JSON object with the following fields:
-      - code: Markdown-formatted code block (Python, TypeScript, etc.)
-
-    Example:
-    {
-      "code": "```python\ndef create_account(...):\n    # implementation\n```",
-    }
-
-  agent: test_analyst
-
-setup_task:
-  description: >
-    Set up the development environment, including installing necessary dependencies and tools.
-    Ensure that the environment is configured correctly for the project.
-    Use the uv tool to install dependencies from the pyproject.toml file.
-    Ensure that the development environment is ready for coding and testing.
-    This task is crucial for the successful execution of the development tasks.
-    Use the CodeInterpreterTool to execute the application and see if it works.
-
-  expected_output: >
-    A single JSON object with the following fields:
-      - setup_status: string (e.g. "Development environment set up successfully")
-
-    Example:
-    {
-      "setup_status": "Development environment set up successfully"
     }
 
   agent: dev_ops
