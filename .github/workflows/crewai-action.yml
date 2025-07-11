@@ -6,6 +6,14 @@ on:
 jobs:
   run-develop-agent:
     runs-on: ubuntu-latest
+    env:
+      NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+      GH_REPO_KEY: ${{ secrets.GH_REPO_KEY }}
+      OPENAI_API_BASE: ${ secrets.OPENAI_API_BASE }
+      OPENAI_MODEL_NAME: ${ secrets.OPENAI_MODEL_NAME }
+      OPENAI_API_KEY: ${ secrets.OPENAI_API_KEY }
+      GEMINI_API_KEY: ${ secrets.GEMINI_API_KEY }
+      GH_REPO_KEY: ${{ secrets.GH_REPO_KEY }}
 
     steps:
       - name: 🛎️ Checkout code
