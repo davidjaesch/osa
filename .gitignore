@@ -1,0 +1,5 @@
+.mpyp_cache
+.copilotenv
+.venv
+__pycache__
+ai/.env
