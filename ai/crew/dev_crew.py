@@ -17,6 +17,8 @@ class DeveloperCrew:
 
     def __init__(self):
         self.init_tools()
+        self.init_agents()
+        self.init_tasks()
 
     def init_tools(self):
         """Initialize tools for the crew."""
