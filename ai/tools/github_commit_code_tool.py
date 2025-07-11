@@ -6,16 +6,12 @@ from dotenv import load_dotenv
 from github import Github
 from pydantic import BaseModel, Field
 
-
 load_dotenv()
-GH_REPO_KEY = os.getenv("NOTION_API_KEY")
-
+GH_REPO_KEY = os.getenv("GH_REPO_KEY")
 
 
 class CommitCodeInput(BaseModel):
-    branch_name: str = Field(
-        ..., description="Name of the branch to commit to"
-    )
+    branch_name: str = Field(..., description="Name of the branch to commit to")
     path: str = Field(..., description="Path to the file to commit")
     content: str = Field(..., description="Content of the file to commit")
     commit_msg: str = Field(..., description="Commit message")

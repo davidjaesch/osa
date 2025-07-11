@@ -6,9 +6,8 @@ from dotenv import load_dotenv
 from github import Github
 from pydantic import BaseModel, Field
 
-
 load_dotenv()
-GH_REPO_KEY = os.getenv("NOTION_API_KEY")
+GH_REPO_KEY = os.getenv("GH_REPO_KEY")
 
 
 class ListFilesInput(BaseModel):
