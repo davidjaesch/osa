@@ -26,9 +26,37 @@ class DeveloperCrew:
     github_create_pull_request_tool = GithubCreatePullRequestTool()
 
     @agent
+    def requirements_engineer(self) -> Agent:
+        return Agent(
+            config=self.agents_config["requirements_engineer"],  # type: ignore[index]
+            verbose=True,
+            tools=[
+                self.github_issue_fetch_tool,
+                self.github_list_files_tool,
+            ],
+            # allow_code_execution=True,
+            allow_delegation=True,
+        )
+
+    @agent
     def developer(self) -> Agent:
         return Agent(
             config=self.agents_config["developer"],  # type: ignore[index]
+            verbose=True,
+            tools=[
+                self.github_issue_fetch_tool,
+                self.github_list_files_tool,
+                self.github_commit_code_tool,
+                self.code_tool,
+            ],
+            allow_code_execution=True,
+            allow_delegation=True,
+        )
+
+    @agent
+    def test_analyst(self) -> Agent:
+        return Agent(
+            config=self.agents_config["test_analyst"],  # type: ignore[index]
             verbose=True,
             tools=[
                 self.github_issue_fetch_tool,
@@ -39,8 +67,25 @@ class DeveloperCrew:
                 self.code_tool,
             ],
             allow_code_execution=True,
+            allow_delegation=True,
         )
 
+    @agent
+    def dev_ops(self) -> Agent:
+        return Agent(
+            config=self.agents_config["dev_ops"],  # type: ignore[index]
+            verbose=True,
+            tools=[
+                self.github_issue_fetch_tool,
+                self.github_list_files_tool,
+                self.github_create_branch_tool,
+                self.github_commit_code_tool,
+                self.github_create_pull_request_tool,
+                self.code_tool,
+            ],
+            allow_code_execution=True,
+            allow_delegation=True,
+        )
     # @task
     # def backlog_task(self) -> Task:
     #     return Task(
@@ -54,12 +99,47 @@ class DeveloperCrew:
             # context=[self.backlog_task()],
         )
 
+    @task
+    def requirements_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["requirements_task"],  # type: ignore[index]
+            # context=[self.backlog_task()],
+        )
+
+    @task
+    def create_branch_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["create_branch_task"],  # type: ignore[index]
+            # context=[self.backlog_task()],
+        )
+
+    @task
+    def open_pr_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["open_pr_task"],  # type: ignore[index]
+            # context=[self.backlog_task()],
+        )
+
+    @task
+    def test_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["test_task"],  # type: ignore[index]
+            # context=[self.backlog_task()],
+        )
+
+    @task
+    def setup_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["setup_task"],  # type: ignore[index]
+            # context=[self.backlog_task()],
+        )
+
     @crew
     def crew(self) -> Crew:
         """Creates the software development crew"""
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
-            process=Process.sequential,
+            process=Process.hierarchical,
             verbose=True,
         )
