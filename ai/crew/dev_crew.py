@@ -172,8 +172,8 @@ class DeveloperCrew:
         )
 
         self.tasks = [
-            self.develop_task,
             self.requirements_task,
+            self.develop_task,
             self.pr_task,
         ]
 
