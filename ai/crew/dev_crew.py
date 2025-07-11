@@ -34,7 +34,7 @@ class DeveloperCrew:
                 self.github_list_files_tool,
             ],
             # allow_code_execution=True,
-            allow_delegation=True,
+            allow_delegation=False,
         )
 
     @agent
@@ -49,7 +49,7 @@ class DeveloperCrew:
                 self.code_tool,
             ],
             allow_code_execution=True,
-            allow_delegation=True,
+            allow_delegation=False,
         )
 
     @agent
@@ -66,7 +66,7 @@ class DeveloperCrew:
                 self.code_tool,
             ],
             allow_code_execution=True,
-            allow_delegation=True,
+            allow_delegation=False,
         )
 
     @agent
@@ -83,7 +83,7 @@ class DeveloperCrew:
                 self.code_tool,
             ],
             allow_code_execution=True,
-            allow_delegation=True,
+            allow_delegation=False,
         )
 
     # @agent
@@ -105,42 +105,36 @@ class DeveloperCrew:
     def develop_task(self) -> Task:
         return Task(
             config=self.tasks_config["develop_task"],  # type: ignore[index]
-            context=self.tasks,  # type: ignore[index],
         )
 
     @task
     def requirements_task(self) -> Task:
         return Task(
             config=self.tasks_config["requirements_task"],  # type: ignore[index]
-            context=self.tasks,
         )
 
     @task
     def create_branch_task(self) -> Task:
         return Task(
             config=self.tasks_config["create_branch_task"],  # type: ignore[index]
-            context=self.tasks,
         )
 
     @task
     def open_pr_task(self) -> Task:
         return Task(
             config=self.tasks_config["open_pr_task"],  # type: ignore[index]
-            context=self.tasks,
         )
 
     @task
     def test_task(self) -> Task:
         return Task(
             config=self.tasks_config["test_task"],  # type: ignore[index]
-            context=self.tasks,
         )
 
     @task
     def setup_task(self) -> Task:
         return Task(
             config=self.tasks_config["setup_task"],  # type: ignore[index]
-            context=self.tasks,
         )
 
     @crew
